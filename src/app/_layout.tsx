@@ -8,15 +8,12 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
+    <Tabs>
       <Tabs.Screen
         name="allocations"
         options={{
           title: 'Allocations',
+          headerShown: false,
           tabBarIcon: ({color, size}) => (
             <MaterialIcons name='account-tree' color={color} size={size} />
           ),
@@ -32,6 +29,7 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen name='index' options={{href: null}} />
     </Tabs>
   );
 }
