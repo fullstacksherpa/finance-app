@@ -1,8 +1,11 @@
 import {View, Text, StyleSheet, TextInput, Button} from 'react-native'
 import AccountList from '../components/AccountList'
-import {Entypo} from '@expo/vector-icons'
+import {useState} from 'react';
 
 export default function AccountsScreen() {
+	const [name, setName] = useState('');
+	const [cap, setCap] = useState('');
+	const [tap, setTap] = useState('');
 
 	const createAccount = () => {
 		console.warn('create account')
@@ -16,9 +19,9 @@ export default function AccountsScreen() {
 			</View>
 			<AccountList />
 			<View style={styles.inputRow}>
-				<TextInput placeholder='Name' style={styles.input} />
-				<TextInput placeholder='CAP %' style={styles.input} />
-				<TextInput placeholder='TAP %' style={styles.input} />
+				<TextInput placeholder='Name' value={name} onChangeText={setName} style={styles.input} />
+				<TextInput placeholder='CAP %' value={cap} onChangeText={setCap} style={styles.input} />
+				<TextInput placeholder='TAP %' value={tap} onChangeText={setTap} style={styles.input} />
 			</View>
 			<Button title="Add account" onPress={createAccount} />
 		</View>
