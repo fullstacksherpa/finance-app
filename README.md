@@ -75,74 +75,92 @@ app.json
 
 ### 4. db/schems.ts
 
-```
-
-import {appSchema, tableSchema} from '@nozbe/watermelondb';
+```typescript
+import { appSchema, tableSchema } from "@nozbe/watermelondb";
 
 export default appSchema({
-	version: 1,
-	tables: [
-		tableSchema({
-			name: 'accounts',
-			columns: [
-				{name: 'name', type: 'string'},
-				{name: 'cap', type: 'number'},
-				{name: 'tap', type: 'number'},
-			],
-		}),
-	],
+  version: 1,
+  tables: [
+    tableSchema({
+      name: "accounts",
+      columns: [
+        { name: "name", type: "string" },
+        { name: "cap", type: "number" },
+        { name: "tap", type: "number" },
+      ],
+    }),
+  ],
 });
 ```
 
 ### 5. db/migrations.ts
 
-```
-import {schemaMigrations} from '@nozbe/watermelondb/Schema/migrations'
+```typescript
+import { schemaMigrations } from "@nozbe/watermelondb/Schema/migrations";
 
 export default schemaMigrations({
-	migrations: [
-		// We'll add migration definitions here later
-	],
-})
+  migrations: [
+    // We'll add migration definitions here later
+  ],
+});
 ```
 
 ###6. db/index.ts
 
-```
-import {Database} from '@nozbe/watermelondb'
-import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite'
+```typescript
+import { Database } from "@nozbe/watermelondb";
+import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 
-import schema from './schema';
-import migrations from './migrations'
+import schema from "./schema";
+import migrations from "./migrations";
 // import Post from './model/Post' // ⬅️ You'll import your Models here
 
-import Account from '../model/Account';
+import Account from "../model/Account";
 
 // First, create the adapter to the underlying database:
 const adapter = new SQLiteAdapter({
-	schema,
-	// (You might want to comment it out for development purposes -- see Migrations documentation)
-	migrations,
-	// (optional database name or file system path)
-	// dbName: 'myapp',
-	// (recommended option, should work flawlessly out of the box on iOS. On Android,
-	// additional installation steps have to be taken - disable if you run into issues...)
-	jsi: true, /* Platform.OS === 'ios' */
-	// (optional, but you should implement this method)
-	onSetUpError: error => {
-		// Database failed to load -- offer the user to reload the app or log out
-	}
-})
+  schema,
+  // (You might want to comment it out for development purposes -- see Migrations documentation)
+  migrations,
+  // (optional database name or file system path)
+  // dbName: 'myapp',
+  // (recommended option, should work flawlessly out of the box on iOS. On Android,
+  // additional installation steps have to be taken - disable if you run into issues...)
+  jsi: true /* Platform.OS === 'ios' */,
+  // (optional, but you should implement this method)
+  onSetUpError: (error) => {
+    // Database failed to load -- offer the user to reload the app or log out
+  },
+});
 
 // Then, make a Watermelon database from it!
 const database = new Database({
-	adapter,
-	modelClasses: [
-		Account
-	],
-})
+  adapter,
+  modelClasses: [Account],
+});
 
 export default database;
 
-export const accountsCollection = database.get<Account>('accounts')
+export const accountsCollection = database.get<Account>("accounts");
 ```
+
+### 6. Time to make our component reactive
+
+<p>We can fetch the data from local watermelonDB and then render it in components but the only problem is that this is not reactive. if the data updated or deleted, the component will not re-render to reflect the changes.</p> <p>to make component rerender when data change we need to make the data observe automatically</p>
+
+```typescript
+import { withObservables } from "@nozbe/watermelondb/react";
+
+//we are creating enhance higher order components and wrapping required component by this HOC.
+
+//the first parameter of withObservables is the dependency like useEffect and second is callback function that received the props that the children component is receiving. our AccountList component is receiving accounts props so we are providing that props  through callback function. this HOC is quering accounts and rerendering components if value changes.
+
+const enhance = withObservables([], () => ({
+  accounts: accountsCollection.query(),
+}));
+
+const EnhancedAccountsList = enhance(AccountList);
+export default EnhancedAccountsList;
+```
+
+Now, if we render <EnhancedAccountsList />, it will update every time the comment changes.
