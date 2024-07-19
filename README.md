@@ -163,4 +163,4 @@ const EnhancedAccountsList = enhance(AccountList);
 export default EnhancedAccountsList;
 ```
 
-Now, if we render <EnhancedAccountsList />, it will update every time the comment changes.
+Now, if we render `<EnhancedAccountsList />`, it will update every time the accounts changes.
