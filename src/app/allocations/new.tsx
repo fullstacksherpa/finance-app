@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TextInput, Button} from 'react-native'
-import {Stack} from 'expo-router'
+import {router, Stack} from 'expo-router'
 import {useState} from 'react'
 import database, {allocationsCollection} from '@/src/db'
 
@@ -7,12 +7,21 @@ import database, {allocationsCollection} from '@/src/db'
 export default function NewAllocationScreen() {
 	const [income, setIncome] = useState('')
 
+	const fetchAll = async () => {
+		await database.write(async () => {
+			const data = await allocationsCollection.query().fetch()
+			console.log(data)
+		})
+	}
+
 	const save = async () => {
 		await database.write(async () => {
 			allocationsCollection.create((newAllocation) => {
 				newAllocation.income = Number.parseFloat(income);
 			})
 		})
+		setIncome('')
+		router.back()
 	}
 	return (
 		<View style={styles.container}>
@@ -24,6 +33,7 @@ export default function NewAllocationScreen() {
 			</View>
 
 			<Button title='save' onPress={save} />
+			<Button title='fetchAll' onPress={save} />
 		</View>
 	)
 }

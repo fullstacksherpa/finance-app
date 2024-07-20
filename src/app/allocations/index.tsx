@@ -1,10 +1,30 @@
-import {View, Text} from 'react-native';
-import {Link} from 'expo-router';
+import {View, Text, StatusBar, StyleSheet} from 'react-native';
+import {Link, Stack} from 'expo-router';
+import AllocationList from '@/src/components/AllocationsList';
 
 export default function HomeScreen() {
   return (
-    <View><Text>Index page of alocation</Text>
-      <Link href='/allocations/new'>Go to new page</Link>
+    <View style={styles.container}>
+      <Stack.Screen options={{title: 'Allocations'}} />
+      <Link href='/allocations/new' asChild><Text style={styles.button}>Go to new page</Text></Link>
+      <AllocationList />
+      <StatusBar />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  button: {
+    backgroundColor: 'green',
+    color: 'white',
+    margin: 10,
+    padding: 10,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    borderRadius: 5,
+    overflow: 'hidden',
+  }
+})
