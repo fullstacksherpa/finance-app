@@ -4,7 +4,9 @@ import {useState} from 'react';
 import database, {accountsCollection} from '../db';
 
 
+
 export default function AccountsScreen() {
+
 	const [name, setName] = useState('');
 	const [cap, setCap] = useState('');
 	const [tap, setTap] = useState('');
@@ -21,6 +23,16 @@ export default function AccountsScreen() {
 		setCap('');
 		setTap('');
 	}
+
+	// const onTest = async () => {
+	// 	await database.write(async () => {
+	// 		const accounts = await accountsCollection.query().fetch();
+	// 		const account = accounts[0];
+	// 		account.update((updatedAccount) => {
+	// 			updatedAccount.name = "from onTest final"
+	// 		})
+	// 	})
+	// }
 
 	return (
 		<View style={{gap: 5, padding: 5}}>
