@@ -164,3 +164,7 @@ export default EnhancedAccountsList;
 ```
 
 Now, if we render `<EnhancedAccountsList />`, it will update every time the accounts changes.
+
+## Database Schema
+
+![DatabaseSchema](assets/images/databaseSchema.png)
