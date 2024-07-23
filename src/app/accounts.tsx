@@ -6,7 +6,6 @@ import database, {accountsCollection} from '../db';
 
 
 export default function AccountsScreen() {
-
 	const [name, setName] = useState('');
 	const [cap, setCap] = useState('');
 	const [tap, setTap] = useState('');
